@@ -1110,6 +1110,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 1198272045}
   pickUpScript: {fileID: 2032307812}
+  interactactable:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &1198272043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1192,6 +1195,70 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1001 &1284980745
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1088191088817449558, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.2781076
+      objectReference: {fileID: 0}
+    - target: {fileID: 1088191088817449558, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 1088191088817449558, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.373567
+      objectReference: {fileID: 0}
+    - target: {fileID: 1088191088817449558, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6524352
+      objectReference: {fileID: 0}
+    - target: {fileID: 1088191088817449558, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7578446
+      objectReference: {fileID: 0}
+    - target: {fileID: 1088191088817449558, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1088191088817449558, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1088191088817449558, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 98.54901
+      objectReference: {fileID: 0}
+    - target: {fileID: 1088191088817449558, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1088191088817449558, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6034770689119535470, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      propertyPath: m_Name
+      value: Hammer Object
+      objectReference: {fileID: 0}
+    - target: {fileID: 6034770689119535470, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      propertyPath: m_TagString
+      value: Hammer
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6034770689119535470, guid: 539162d37946da841a3d21b72921876b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1765344974}
+  m_SourcePrefab: {fileID: 100100000, guid: 539162d37946da841a3d21b72921876b, type: 3}
 --- !u!1 &1427064308
 GameObject:
   m_ObjectHideFlags: 0
@@ -1325,6 +1392,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1765344969 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6034770689119535470, guid: 539162d37946da841a3d21b72921876b, type: 3}
+  m_PrefabInstance: {fileID: 1284980745}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1765344974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1765344969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac7551d6e66b3f743937258fa873e5ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationOffset: {x: 90, y: 90, z: 90}
+  positionOffset: {x: 0, y: 0, z: -0.5}
 --- !u!1 &1862515528
 GameObject:
   m_ObjectHideFlags: 0
@@ -1555,7 +1641,7 @@ MonoBehaviour:
   grabableLayer:
     serializedVersion: 2
     m_Bits: 64
-  environmentLayer:
+  interactable:
     serializedVersion: 2
     m_Bits: 0
   pickUpRange: 3
@@ -1653,3 +1739,4 @@ SceneRoots:
   - {fileID: 1862515532}
   - {fileID: 1195454629281355059}
   - {fileID: 1427064313}
+  - {fileID: 1284980745}

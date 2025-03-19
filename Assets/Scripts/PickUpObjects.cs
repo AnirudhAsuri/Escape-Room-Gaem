@@ -53,29 +53,14 @@ public class PickUpObjects : MonoBehaviour
     public void PickOrDropObjects()
     {
         Vector3 rayOrigin = Camera.main.transform.position;
-        Vector3 rayDirection = Camera.main.transform.forward * pickUpRange;
-
         RaycastHit hit;
 
         if (pickedObject == null) // Picking up objects
         {
             if (Physics.Raycast(rayOrigin, Camera.main.transform.forward, out hit, pickUpRange, grabableLayer | interactable))
             {
-                if(hit.collider.CompareTag("Button"))
+                if (hit.rigidbody != null && hit.rigidbody.mass < 40f)
                 {
-                    if (Input.GetKeyDown(KeyCode.Mouse0))
-                    {
-                        ButtonMechanics buttonMechanics = hit.collider.GetComponent<ButtonMechanics>();
-                        if(buttonMechanics != null)
-                        {
-                            buttonMechanics.PressButton();
-                        }
-                    }
-                }
-                if (hit.rigidbody != null && hit.rigidbody.mass < 40f) // Check mass before picking up
-                {
-                    Debug.DrawRay(rayOrigin, rayDirection, Color.green);
-
                     if (Input.GetKeyDown(KeyCode.Mouse0))
                     {
                         pickedObject = hit.transform.root;
@@ -86,24 +71,33 @@ public class PickUpObjects : MonoBehaviour
                         {
                             pickedObjectRb.isKinematic = true;
                             pickedObjectRb.useGravity = false;
-                            Physics.IgnoreCollision(pickedObjectCollider, playerCollider, true);
+
+                            Collider[] allColliders = pickedObject.GetComponentsInChildren<Collider>();
+                            foreach (Collider col in allColliders)
+                            {
+                                Physics.IgnoreCollision(col, playerCollider, true);
+                            }
                         }
 
                         pickedObject.SetParent(handPosition, true);
                         pickedObject.localPosition = Vector3.zero;
-                        pickedObject.localRotation = Quaternion.identity;
 
-                        // Check if picked object is a gun
-                        gunMechanics = pickedObject.GetComponent<GunMechanics>();
+                        // Check if the object has a HammerMechanics script
+                        HammerMechanics hammer = pickedObject.GetComponent<HammerMechanics>();
+                        if (hammer != null)
+                        {
+                            pickedObject.localRotation = hammer.GetRotationOffset();
+                            pickedObject.localPosition = hammer.GetPositionOffset();
+                        }
+                        else
+                        {
+                            pickedObject.localRotation = Quaternion.identity; // Default rotation
+                        }
                     }
-                }
-                else
-                {
-                    Debug.DrawRay(rayOrigin, rayDirection, Color.red);
                 }
             }
         }
-        else // Dropping objects (should be outside the picking block)
+        else // Dropping objects
         {
             if (Input.GetKeyDown(KeyCode.Q))
             {
@@ -113,21 +107,24 @@ public class PickUpObjects : MonoBehaviour
                 {
                     pickedObjectRb.isKinematic = false;
                     pickedObjectRb.useGravity = true;
-                    Physics.IgnoreCollision(pickedObjectCollider, playerCollider, false);
+
+                    Collider[] allColliders = pickedObject.GetComponentsInChildren<Collider>();
+                    foreach (Collider col in allColliders)
+                    {
+                        Physics.IgnoreCollision(col, playerCollider, false);
+                    }
                 }
 
                 pickedObject.SetParent(null);
                 pickedObject.position = dropPosition;
-
-                // Reset gun mechanics reference when dropping
-                gunMechanics = null;
+                pickedObject.rotation = Quaternion.identity; // Reset rotation on drop
 
                 pickedObject = null;
                 pickedObjectRb = null;
             }
         }
-
-        HandleHandBob(); // Handles sprint bobbing
+    
+    HandleHandBob(); // Handles sprint bobbing
     }
 
     private void HandleHandBob()
