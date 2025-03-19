@@ -59,6 +59,15 @@ public class PickUpObjects : MonoBehaviour
         {
             if (Physics.Raycast(rayOrigin, Camera.main.transform.forward, out hit, pickUpRange, grabableLayer | interactable))
             {
+                if(hit.collider.CompareTag("Button"))
+                {
+                    ButtonMechanics buttonMechanics = hit.collider.GetComponent<ButtonMechanics>();
+
+                    if(Input.GetKeyDown(KeyCode.Mouse0))
+                    {
+                        buttonMechanics.PressButton();
+                    }
+                }
                 if (hit.rigidbody != null && hit.rigidbody.mass < 40f)
                 {
                     if (Input.GetKeyDown(KeyCode.Mouse0))

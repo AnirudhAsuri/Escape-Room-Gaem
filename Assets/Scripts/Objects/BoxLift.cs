@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BoxLift : MonoBehaviour, IButtonAction
+public class BoxLift : MonoBehaviour
 {
     private Animator animator;
 
