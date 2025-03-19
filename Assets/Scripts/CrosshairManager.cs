@@ -8,7 +8,7 @@ public class CrosshairManager : MonoBehaviour
 
     private Image verticalLine;
     private Image horizontalLine;
-    private Color defaultColor = Color.black;
+    private Color defaultColor = Color.white;
     private Color highlightColor = Color.red;
 
     public LayerMask interactactable;

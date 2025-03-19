@@ -3,19 +3,28 @@ using UnityEngine;
 public class BoxLift : MonoBehaviour
 {
     private Animator animator;
+    private bool isOpen = false;
 
     private void Start()
     {
         animator = GetComponentInChildren<Animator>();
     }
 
-    public void Activate()
+    public void Open()
     {
-        animator.Play("BoxOpen");
+        if (!isOpen)
+        {
+            isOpen = true;
+            animator.Play("BoxOpen");
+        }
     }
 
-    public void Deactivate()
+    public void Close()
     {
-        animator.Play("BoxClose");
+        if (isOpen)
+        {
+            isOpen = false;
+            animator.Play("BoxClose");
+        }
     }
 }

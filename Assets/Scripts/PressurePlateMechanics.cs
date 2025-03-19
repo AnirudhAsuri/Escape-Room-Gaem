@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 public class PressurePlateMechanics : MonoBehaviour
@@ -8,17 +8,17 @@ public class PressurePlateMechanics : MonoBehaviour
     private float currentWeight = 0f;
 
     [Header("Movement Settings")]
-    public float pressDepth = 0.096f; // How far the plate moves down
-    public float pressSpeed = 5f;   // How fast it moves
+    public float maxPressDepth = 0.07f; // Maximum depth the plate can be pressed
+    public float pressSpeed = 5f;
     private Vector3 initialPosition;
-    private Vector3 targetPosition;
-    private float lerpProgress = 0f; // Track progress
+    private float currentDepth = 0f; // How far the plate is pushed
+    private bool isPressing = false;
 
     [Header("Events")]
     public UnityEvent onPress;
     public UnityEvent onRelease;
 
-    private bool isPressed = false;
+    public bool isPressed = false;
 
     private Rigidbody rb;
 
@@ -27,57 +27,53 @@ public class PressurePlateMechanics : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true; // Allows movement without affecting physics
         initialPosition = transform.position;
-        targetPosition = initialPosition;
     }
 
     private void Update()
     {
-        lerpProgress = Mathf.MoveTowards(lerpProgress, 1f, Time.deltaTime * pressSpeed);
-        rb.MovePosition(Vector3.Lerp(rb.position, targetPosition, lerpProgress));
+        if (isPressing)
+        {
+            // Smoothly move the plate down
+            Vector3 targetPosition = initialPosition + Vector3.down * currentDepth;
+            rb.MovePosition(Vector3.Lerp(rb.position, targetPosition, Time.deltaTime * pressSpeed));
+
+            // Check if the plate has been pushed far enough
+            if (currentDepth >= maxPressDepth && !isPressed)
+            {
+                isPressed = true;
+                onPress.Invoke();
+            }
+        }
+        else
+        {
+            // Reset position when no weight is present
+            rb.MovePosition(Vector3.Lerp(rb.position, initialPosition, Time.deltaTime * pressSpeed));
+
+            if (isPressed)
+            {
+                isPressed = false;
+                onRelease.Invoke();
+            }
+        }
     }
 
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
-        if(collision.gameObject.name != "Pressure plate Table")
+        if (collision.gameObject.name != "Pressure plate Table" && collision.rigidbody)
         {
-            Debug.Log("Collided with: " + collision.gameObject.name);
-            if (collision.rigidbody)
-            {
-                currentWeight += collision.rigidbody.mass;
-                CheckWeight();
-            }
+            currentWeight = collision.rigidbody.mass;
+            currentDepth = Mathf.Clamp(currentWeight / requiredWeight * maxPressDepth, 0, maxPressDepth);
+            isPressing = true;
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.rigidbody.name != "Pressure plate Table")
+        if (collision.gameObject.name != "Pressure plate Table")
         {
-            if (collision.rigidbody)
-            {
-                currentWeight -= collision.rigidbody.mass;
-                CheckWeight();
-            }
-        }
-            
-    }
-
-    private void CheckWeight()
-    {
-        if (currentWeight >= requiredWeight && !isPressed)
-        {
-            isPressed = true;
-            targetPosition = initialPosition + Vector3.down * pressDepth; // Move down
-            lerpProgress = 0f; // Reset Lerp progress
-            onPress.Invoke();
-        }
-        else if (currentWeight < requiredWeight && isPressed)
-        {
-            isPressed = false;
-            targetPosition = initialPosition; // Move back up
-            lerpProgress = 0f; // Reset Lerp progress
-            onRelease.Invoke();
+            isPressing = false;
+            currentWeight = 0;
+            currentDepth = 0;
         }
     }
 }
