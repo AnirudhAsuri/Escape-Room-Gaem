@@ -66,7 +66,7 @@ public class CrosshairManager : MonoBehaviour
         // Combine layers into a single LayerMask
         LayerMask combinedLayerMask = pickUpScript.grabableLayer | interactactable;
 
-        if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, pickUpScript.pickUpRange, combinedLayerMask))
+        if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, pickUpScript.pickUpRange, pickUpScript.grabableLayer))
         {
             // Check if it's a grabbable object
             if (((1 << hit.collider.gameObject.layer) & pickUpScript.grabableLayer) != 0)
@@ -79,7 +79,7 @@ public class CrosshairManager : MonoBehaviour
             }
 
             // Check if it's an interactable object
-            if (((1 << hit.collider.gameObject.layer) & interactactable) != 0)
+            if ((1 << hit.collider.gameObject.layer) != 0)
             {
                 SetCrosshairColor(highlightColor);
                 return;
