@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PickUpObjects : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class PickUpObjects : MonoBehaviour
     public Transform pickedObject;
     private Rigidbody pickedObjectRb;
     private Collider pickedObjectCollider;
-    private GunMechanics gunMechanics; // Reference to GunMechanics
+    private GunMechanics gunMechanics;
 
     public Transform handPosition;
     private Vector3 originalHandPosition;
@@ -35,6 +36,8 @@ public class PickUpObjects : MonoBehaviour
         if (pickedObject != null)
         {
             GunMechanics gunMechanics = pickedObject.GetComponent<GunMechanics>();
+            DartMechanics dartMechanics = pickedObject.GetComponent<DartMechanics>();
+
             if (gunMechanics != null)
             {
                 if (Input.GetMouseButtonDown(0)) // Left-click to shoot
@@ -46,8 +49,16 @@ public class PickUpObjects : MonoBehaviour
                     gunMechanics.Reload();
                 }
             }
+            else if (dartMechanics != null)
+            {
+                if (Input.GetMouseButtonDown(1))
+                {
+                    Vector3 throwDirection = Camera.main.transform.forward;
+                    dartMechanics.ThrowDart(throwDirection);
+                    pickedObject = null;
+                }
+            }
         }
-
     }
 
     public void PickOrDropObjects()
@@ -59,16 +70,27 @@ public class PickUpObjects : MonoBehaviour
         {
             if (Physics.Raycast(rayOrigin, Camera.main.transform.forward, out hit, pickUpRange, grabableLayer | interactable))
             {
-                if(hit.collider.CompareTag("Button"))
+                if (hit.collider.CompareTag("Button"))
                 {
                     ButtonMechanics buttonMechanics = hit.collider.GetComponent<ButtonMechanics>();
 
-                    if(Input.GetKeyDown(KeyCode.Mouse0))
+                    if (Input.GetKeyDown(KeyCode.Mouse0))
                     {
                         buttonMechanics.PressButton();
                     }
                 }
-                if (hit.rigidbody != null && hit.rigidbody.mass < 40f)
+                else if (hit.collider.CompareTag("Dial"))
+                {
+                    DialRotate dial = hit.collider.GetComponent<DialRotate>();
+
+                    if (Input.GetKeyDown(KeyCode.Mouse0) && dial != null)
+                    {
+                        Debug.Log("If Activated");
+                        dial.RotateDial();
+                    }
+                }
+
+                else if (hit.rigidbody != null && hit.rigidbody.mass < 40f)
                 {
                     if (Input.GetKeyDown(KeyCode.Mouse0))
                     {
@@ -91,12 +113,30 @@ public class PickUpObjects : MonoBehaviour
                         pickedObject.SetParent(handPosition, true);
                         pickedObject.localPosition = Vector3.zero;
 
-                        // Check if the object has a HammerMechanics script
+                        // Check if the object has a HammerMechanics or KnifeMechanics script
                         HammerMechanics hammer = pickedObject.GetComponent<HammerMechanics>();
+                        KnifeMechanics knife = pickedObject.GetComponent<KnifeMechanics>();
+                        DartMechanics dart = pickedObject.GetComponent<DartMechanics>();
                         if (hammer != null)
                         {
                             pickedObject.localRotation = hammer.GetRotationOffset();
                             pickedObject.localPosition = hammer.GetPositionOffset();
+                        }
+                        else if (knife)
+                        {
+                            pickedObject.localRotation = knife.GetRotationOffset();
+                            pickedObject.localPosition = knife.GetPositionOffset();
+                        }
+                        else if(dart)
+                        { 
+                            pickedObject.localRotation = dart.GetRotationOffset();
+                            pickedObject.localPosition = dart.GetPositionOffset();
+
+                            Collider dartCollider = dart.GetComponent<Collider>();
+                            if (dartCollider != null)
+                            {
+                                dartCollider.enabled = false;
+                            }
                         }
                         else
                         {
@@ -132,9 +172,10 @@ public class PickUpObjects : MonoBehaviour
                 pickedObjectRb = null;
             }
         }
-    
-    HandleHandBob(); // Handles sprint bobbing
+
+        HandleHandBob(); // Handles sprint bobbing
     }
+
 
     private void HandleHandBob()
     {

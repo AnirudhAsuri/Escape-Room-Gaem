@@ -1,43 +1,68 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class PressurePlateMechanics : MonoBehaviour
 {
     [Header("Weight Settings")]
-    public float requiredWeight = 25f;
-    private float currentWeight = 0f;
+    public float requiredWeight = 25f;  // The weight required to press the plate
+    private float currentWeight = 0f;   // The total weight on the plate
 
     [Header("Movement Settings")]
-    public float maxPressDepth = 0.07f; // Maximum depth the plate can be pressed
-    public float pressSpeed = 5f;
-    private Vector3 initialPosition;
-    private float currentDepth = 0f; // How far the plate is pushed
-    private bool isPressing = false;
+    public float maxPressDepth = 0.07f;  // Maximum depth the plate can be pressed
+    public float pressSpeed = 5f;        // Speed at which the plate moves down
+    private Vector3 initialPosition;     // Initial position of the plate
+    private float currentDepth = 0f;     // How far the plate is pressed down
+    private bool isPressing = false;     // Flag to indicate whether the plate is being pressed
 
     [Header("Events")]
-    public UnityEvent onPress;
-    public UnityEvent onRelease;
+    public UnityEvent onPress;   // Event triggered when plate is pressed
+    public UnityEvent onRelease; // Event triggered when plate is released
 
-    public bool isPressed = false;
+    public bool isPressed = false; // Whether the plate is fully pressed
 
-    private Rigidbody rb;
+    private Rigidbody rb;                             // Rigidbody for the plate
+    private HashSet<Rigidbody> objectsOnPlate = new HashSet<Rigidbody>(); // Track objects on plate
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.isKinematic = true; // Allows movement without affecting physics
+        rb.isKinematic = true;  // Allows movement without affecting physics
         initialPosition = transform.position;
     }
 
     private void Update()
     {
+        // Accumulate the total weight of all objects on the plate
+        currentWeight = 0f;
+        foreach (var obj in objectsOnPlate)
+        {
+            if (obj != null)
+                currentWeight += obj.mass; // Add the mass of each object to the total weight
+        }
+
+        // Check if weight exceeds the required weight
+        bool isWeightEnough = currentWeight >= requiredWeight;
+
+        // Calculate depth based on total weight if it's enough
+        if (isWeightEnough)
+        {
+            currentDepth = Mathf.Clamp(currentWeight / requiredWeight * maxPressDepth, 0, maxPressDepth);
+            isPressing = true;
+        }
+        else
+        {
+            currentDepth = 0f;
+            isPressing = false;
+        }
+
+        // Move the plate down smoothly if pressing
         if (isPressing)
         {
-            // Smoothly move the plate down
             Vector3 targetPosition = initialPosition + Vector3.down * currentDepth;
             rb.MovePosition(Vector3.Lerp(rb.position, targetPosition, Time.deltaTime * pressSpeed));
 
-            // Check if the plate has been pushed far enough
+            // Trigger event if fully pressed
             if (currentDepth >= maxPressDepth && !isPressed)
             {
                 isPressed = true;
@@ -46,7 +71,7 @@ public class PressurePlateMechanics : MonoBehaviour
         }
         else
         {
-            // Reset position when no weight is present
+            // Reset position when no weight is present or weight is not enough
             rb.MovePosition(Vector3.Lerp(rb.position, initialPosition, Time.deltaTime * pressSpeed));
 
             if (isPressed)
@@ -57,23 +82,19 @@ public class PressurePlateMechanics : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name != "Pressure plate Table" && collision.rigidbody)
+        if ((collision.gameObject.name != "Pressure plate Table" || collision.gameObject.name != "Cube.005") && collision.rigidbody)
         {
-            currentWeight = collision.rigidbody.mass;
-            currentDepth = Mathf.Clamp(currentWeight / requiredWeight * maxPressDepth, 0, maxPressDepth);
-            isPressing = true;
+            objectsOnPlate.Add(collision.rigidbody); // Add object to the list
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.name != "Pressure plate Table")
+        if (collision.gameObject.name != "Pressure plate Table" && collision.rigidbody)
         {
-            isPressing = false;
-            currentWeight = 0;
-            currentDepth = 0;
+            objectsOnPlate.Remove(collision.rigidbody); // Remove object from the list
         }
     }
 }

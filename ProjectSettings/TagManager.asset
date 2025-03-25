@@ -7,6 +7,12 @@ TagManager:
   - Button
   - Hammer
   - Breakable
+  - Dial
+  - Dartboard
+  - Dartboard Center
+  - Dartboard 30
+  - Dartboard 20
+  - Dartboard 10
   layers:
   - Default
   - TransparentFX

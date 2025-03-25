@@ -120,14 +120,14 @@ Material:
     - _DstBlend: 10
     - _DstBlendAlpha: 10
     - _EnvironmentReflections: 1
-    - _Freezeeffectnormal: 8.14
+    - _Freezeeffectnormal: 10
     - _Gloss: 0.3252537
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Ice_fresnel: 0
+    - _Ice_fresnel: 3
     - _LocalGlobal: 0
-    - _Metallic: 0.595
+    - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0

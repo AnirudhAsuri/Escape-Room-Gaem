@@ -5,6 +5,7 @@ public class DoorMechanics : MonoBehaviour
     public Animator doorAnimator; // Assign in Inspector
     public PickUpObjects pickUpScript; // Assign your pickup system script
     public string requiredObjectName = "Key"; // Name of the required object
+    public string openAnimationName;
 
     private bool isOpen = false;
 
@@ -30,7 +31,7 @@ public class DoorMechanics : MonoBehaviour
         if (pickUpScript.pickedObject != null &&
             pickUpScript.pickedObject.name == requiredObjectName)
         {
-            doorAnimator.Play("Door Open"); // Directly play the animation
+            doorAnimator.Play(openAnimationName); // Directly play the animation
             isOpen = true;
         }
     }
