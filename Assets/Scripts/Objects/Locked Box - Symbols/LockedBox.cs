@@ -39,7 +39,13 @@ public class LockedBox : MonoBehaviour
     void UnlockBox()
     {
         Debug.Log("Box Unlocked!");
-        noteInside.SetActive(true); // Reveal the note inside
+
+        if (noteInside != null)
+        {
+            noteInside.SetActive(true); // Reveal the note
+            noteInside.transform.SetParent(null); // Unparent the note so it stays in the world
+        }
+
         // Optional: Play an animation or sound effect
     }
 }

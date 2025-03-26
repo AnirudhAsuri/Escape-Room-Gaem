@@ -82,11 +82,21 @@ public class PressurePlateMechanics : MonoBehaviour
         }
     }
 
+    private Dictionary<Rigidbody, int> colliderCounts = new Dictionary<Rigidbody, int>();
+
     private void OnCollisionEnter(Collision collision)
     {
-        if ((collision.gameObject.name != "Pressure plate Table" || collision.gameObject.name != "Cube.005") && collision.rigidbody)
+        if (collision.gameObject.name != "Pressure plate Table" && collision.rigidbody)
         {
-            objectsOnPlate.Add(collision.rigidbody); // Add object to the list
+            Rigidbody rb = collision.rigidbody;
+
+            if (!colliderCounts.ContainsKey(rb))
+            {
+                colliderCounts[rb] = 0;
+                objectsOnPlate.Add(rb);
+            }
+
+            colliderCounts[rb]++;
         }
     }
 
@@ -94,7 +104,19 @@ public class PressurePlateMechanics : MonoBehaviour
     {
         if (collision.gameObject.name != "Pressure plate Table" && collision.rigidbody)
         {
-            objectsOnPlate.Remove(collision.rigidbody); // Remove object from the list
+            Rigidbody rb = collision.rigidbody;
+
+            if (colliderCounts.ContainsKey(rb))
+            {
+                colliderCounts[rb]--;
+
+                if (colliderCounts[rb] <= 0)
+                {
+                    colliderCounts.Remove(rb);
+                    objectsOnPlate.Remove(rb);
+                }
+            }
         }
     }
+
 }

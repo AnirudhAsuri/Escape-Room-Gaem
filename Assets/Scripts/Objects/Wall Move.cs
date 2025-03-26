@@ -18,9 +18,6 @@ public class WallMove : MonoBehaviour
     {
         initialPosition = transform.position;
         targetPosition = initialPosition;
-
-        buttonMechanics = FindAnyObjectByType<ButtonMechanics>();
-        pressurePlateMechanics = FindAnyObjectByType<PressurePlateMechanics>();
     }
 
     public void WallMoveController()

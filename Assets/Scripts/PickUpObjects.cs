@@ -37,6 +37,7 @@ public class PickUpObjects : MonoBehaviour
         {
             GunMechanics gunMechanics = pickedObject.GetComponent<GunMechanics>();
             DartMechanics dartMechanics = pickedObject.GetComponent<DartMechanics>();
+            ForceDartMechanics forceDartMechanics = pickedObject.GetComponent<ForceDartMechanics>();
 
             if (gunMechanics != null)
             {
@@ -55,6 +56,15 @@ public class PickUpObjects : MonoBehaviour
                 {
                     Vector3 throwDirection = Camera.main.transform.forward;
                     dartMechanics.ThrowDart(throwDirection);
+                    pickedObject = null;
+                }
+            }
+            else if (forceDartMechanics != null)
+            {
+                if (Input.GetMouseButtonDown(1))
+                {
+                    Vector3 throwDirection = Camera.main.transform.forward;
+                    forceDartMechanics.ThrowDart(throwDirection);
                     pickedObject = null;
                 }
             }
@@ -117,6 +127,7 @@ public class PickUpObjects : MonoBehaviour
                         HammerMechanics hammer = pickedObject.GetComponent<HammerMechanics>();
                         KnifeMechanics knife = pickedObject.GetComponent<KnifeMechanics>();
                         DartMechanics dart = pickedObject.GetComponent<DartMechanics>();
+                        ForceDartMechanics forceDart = pickedObject.GetComponent<ForceDartMechanics>();
                         if (hammer != null)
                         {
                             pickedObject.localRotation = hammer.GetRotationOffset();
@@ -136,6 +147,17 @@ public class PickUpObjects : MonoBehaviour
                             if (dartCollider != null)
                             {
                                 dartCollider.enabled = false;
+                            }
+                        }
+                        else if(forceDart)
+                        {
+                            pickedObject.localRotation = forceDart.GetRotationOffset();
+                            pickedObject.localPosition = forceDart.GetPositionOffset();
+
+                            Collider forceDartCollider = forceDart.GetComponent<Collider>();
+                            if (forceDartCollider != null)
+                            {
+                                forceDartCollider.enabled = false;
                             }
                         }
                         else

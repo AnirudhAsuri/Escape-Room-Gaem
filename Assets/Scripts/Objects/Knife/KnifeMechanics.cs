@@ -5,56 +5,44 @@ public class KnifeMechanics : MonoBehaviour
     public Vector3 rotationOffset = new Vector3(90, 90, 90);
     public Vector3 positionOffset = new Vector3(0, 0, -0.5f);
 
-    private PickUpObjects pickUpScript;
+    public PickUpObjects pickUpScript;
     private Animator knifeAnimator;
-
-    public GameObject hitbox;
-    private Collider hitboxCollider;
+    private Camera mainCamera;
 
     void Start()
     {
-        pickUpScript = FindObjectOfType<PickUpObjects>();
         knifeAnimator = GetComponentInChildren<Animator>();
-
-        if (hitbox != null)
-        {
-            hitboxCollider = hitbox.GetComponent<Collider>();
-            hitboxCollider.enabled = false; // Start disabled
-        }
-        else
-        {
-            Debug.LogError("Hitbox is not assigned in KnifeMechanics!");
-        }
+        mainCamera = Camera.main;
     }
 
     void Update()
     {
-        if (pickUpScript.pickedObject == transform)
+        if (pickUpScript.pickedObject == transform && Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Attack();
-            }
+            Attack();
         }
     }
 
     private void Attack()
     {
         knifeAnimator.SetTrigger("Slice");
+        TryRemoveDial();
     }
 
-    // Animation event: Called when the hitbox should be active
-    public void EnableHitbox()
+    private void TryRemoveDial()
     {
-        if (hitboxCollider != null)
-            hitboxCollider.enabled = true;
-    }
+        RaycastHit hit;
+        Vector3 origin = mainCamera.transform.position;
+        Vector3 direction = mainCamera.transform.forward;
 
-    // Animation event: Called when the attack is finished
-    public void DisableHitbox()
-    {
-        if (hitboxCollider != null)
-            hitboxCollider.enabled = false;
+        if (Physics.Raycast(origin, direction, out hit, 3f))
+        {
+            MainDialBoxMechanics dialBox = hit.collider.GetComponentInParent<MainDialBoxMechanics>();
+            if (dialBox != null)
+            {
+                dialBox.RemoveDial();
+            }
+        }
     }
 
     public Quaternion GetRotationOffset()

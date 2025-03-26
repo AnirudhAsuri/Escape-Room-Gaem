@@ -8,8 +8,8 @@ public class DartMechanics : MonoBehaviour
     private bool isThrown = false;
     private bool alreadyHit = false;
 
-    public Vector3 rotationOffset = new Vector3(90, 90, 90);
-    public Vector3 positionOffset = new Vector3(0, 0, -0.5f);
+    public Vector3 rotationOffset = new Vector3(0, 0, 90);
+    public Vector3 positionOffset = new Vector3(-1, 0, 0);
 
     public PickUpObjects pickUpObjects; // Reference to the pickup system
 
