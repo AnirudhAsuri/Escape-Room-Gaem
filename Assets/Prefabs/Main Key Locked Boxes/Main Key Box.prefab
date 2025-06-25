@@ -296,7 +296,6 @@ MonoBehaviour:
   - 0
   - 2
   - 5
-  noteInside: {fileID: 4353544254885399549}
 --- !u!114 &1747840324123365213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,6 +327,7 @@ GameObject:
   - component: {fileID: 6476333827672436840}
   - component: {fileID: 6412837258627934449}
   - component: {fileID: 5705786976417115963}
+  - component: {fileID: 5010251025133504858}
   m_Layer: 7
   m_Name: Locked Box - Symbols - Lid - Model
   m_TagString: Untagged
@@ -421,6 +421,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &5010251025133504858
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4100654804189465099}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e79b74fff28442b449c58f66cb4c7752, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5634004258190074885
 GameObject:
   m_ObjectHideFlags: 0
@@ -1038,15 +1059,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 462124, guid: cc5de5e674870ca479a40105f80555ad, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.458
+      value: 0.018
       objectReference: {fileID: 0}
     - target: {fileID: 462124, guid: cc5de5e674870ca479a40105f80555ad, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.025
+      value: 0.102
       objectReference: {fileID: 0}
     - target: {fileID: 462124, guid: cc5de5e674870ca479a40105f80555ad, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.177
+      value: -0.007
       objectReference: {fileID: 0}
     - target: {fileID: 462124, guid: cc5de5e674870ca479a40105f80555ad, type: 3}
       propertyPath: m_LocalRotation.w

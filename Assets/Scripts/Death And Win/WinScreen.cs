@@ -28,7 +28,7 @@ public class WinScreen : MonoBehaviour
 
     public void LoadMainMenu()
     {
-        SceneManager.LoadScene("MainMenu"); // Make sure "MainMenu" is spelled correctly!
+        SceneManager.LoadScene("Main Menu"); // Make sure "MainMenu" is spelled correctly!
     }
     public void RestartGame()
     {

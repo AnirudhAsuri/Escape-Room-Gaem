@@ -5,13 +5,12 @@ public class LockedBox : MonoBehaviour
     public DialRotate[] dials; // Array of all dials
     public string[] correctCombination; // Correct symbol combination
 
-    public GameObject noteInside; // The note that appears when unlocked
+    private Animator anim;
 
-    void Start()
+    private void Start()
     {
-        noteInside.SetActive(false); // Hide the note at the start
+        anim = GetComponentInChildren<Animator>();
     }
-
     public void CheckSolution()
     {
         for (int i = 0; i < dials.Length; i++)
@@ -38,14 +37,6 @@ public class LockedBox : MonoBehaviour
 
     void UnlockBox()
     {
-        Debug.Log("Box Unlocked!");
-
-        if (noteInside != null)
-        {
-            noteInside.SetActive(true); // Reveal the note
-            noteInside.transform.SetParent(null); // Unparent the note so it stays in the world
-        }
-
-        // Optional: Play an animation or sound effect
+        anim.Play("Box Open");
     }
 }
